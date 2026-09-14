@@ -1,19 +1,16 @@
-/* ids.c template
- * Arpan Bansal        <<-- you must change these details!
+/* ids.c
+ * Arpan Bansal
  * ECE 2230 Fall 2026
  * MP1
  *
- * Purpose: An Intrusion Detection System template for MP1
+ * Purpose: Manage an array of pointers to alert records.
  *
- * Assumptions: Many details are incomplete.  The functions to collect input
- * for a record and to print a record specify the format that is required for
- * grading.
+ * Assumptions: Records passed to ids_add are populated, and separately allocated.
+ *  A stored record is not changed or freed until removed.
+ * Capacities fit in int.
+ * Alert input consists of eight valid integers.
  *
- * Bugs: Many details have not been implemented.
- *
- * You must add comments for each function
- *
- * See the ECE 2230 programming guide
+ * Bugs: No known bugs.
  */
 
 #include <stdlib.h>
@@ -23,6 +20,11 @@
 
 #include "ids.h"
 
+/* Create an empty database with size pointer slots, each initialized to NULL.
+ * Return the allocated database, or NULL if size is not positive.
+ * The caller must eventually call ids_destruct to release the database
+ *   and any records still stored in it.
+ */
 struct ids_database *ids_construct(int size)
 {
     if (size <= 0)
@@ -31,7 +33,6 @@ struct ids_database *ids_construct(int size)
     }
     struct ids_database *new_database = malloc(sizeof(struct ids_database));
     new_database->alert_ptr = malloc(size * sizeof(struct alert_t *));
-    //(struct ids_database *)malloc(size * sizeof(struct alert_t *));
     for (int i = 0; i < size; i++)
     {
         (new_database->alert_ptr)[i] = NULL;
@@ -42,6 +43,10 @@ struct ids_database *ids_construct(int size)
     return new_database;
 }
 
+/* Free all stored records, then the pointer array, then the database header.
+ * A NULL list is ignored. Records previously removed are not handled by this function.
+ * All memory associated with the database is freed.
+ */
 void ids_destruct(struct ids_database *list)
 {
     if (list == NULL)
@@ -59,6 +64,11 @@ void ids_destruct(struct ids_database *list)
     free(list);
 }
 
+/* Insert rec_ptr in ascending generator-ID order, after existing equal IDs.
+ * On success, return 1 if capacity doubled, or 0 if capacity stayed the same.
+ * Return -99 for a NULL argument or failed growth;
+ *   in either failure case the caller still maintains rec_ptr.
+ */
 int ids_add(struct ids_database *list, struct alert_t *rec_ptr)
 {
     if (list == NULL || rec_ptr == NULL)
@@ -77,12 +87,13 @@ int ids_add(struct ids_database *list, struct alert_t *rec_ptr)
         list->db_size *= 2;
         retVal = 1;
     }
-    //    struct alert_t curr = *(list->alert_ptr)[0]
+    // Skip equal IDs so their original insertion order is preserved.
     int loc = 0;
     while (loc < list->db_entries && list->alert_ptr[loc]->generator_id <= rec_ptr->generator_id)
     {
         loc++;
     }
+    // Shift backward so no pointer is overwritten before it is moved.
     for (int i = list->db_entries; i > loc; i--)
     {
         list->alert_ptr[i] = list->alert_ptr[i - 1];
@@ -90,12 +101,12 @@ int ids_add(struct ids_database *list, struct alert_t *rec_ptr)
     list->alert_ptr[loc] = rec_ptr;
     list->db_entries++;
     return retVal;
-    /* the return codes
-     *   0  list did not change size
-     *   1  doubled list size
-     */
 }
 
+/* Return the stored pointer at index without copying or removing the record.
+ * Return NULL for a NULL list, an invalid index, or an unoccupied slot.
+ * It is assumed that the caller does not modify or free the returned record.
+ */
 struct alert_t *ids_access(struct ids_database *list, int index)
 {
     if (list == NULL || index < 0 || index >= list->db_entries)
@@ -105,6 +116,12 @@ struct alert_t *ids_access(struct ids_database *list, int index)
     return (list->alert_ptr[index]);
 }
 
+/* Remove and return the record at index; the caller must eventually free it.
+ * Return NULL without changes if the list, index, or record is invalid.
+ * Shift remaining pointers left to close the gap.
+ * Halve capacity once if occupancy is below 20% and the initial minimum is
+ * respected. A failed shrink keeps the old array but removal is still completed.
+ */
 struct alert_t *ids_remove(struct ids_database *list, int index)
 {
     if (list == NULL || index < 0 || index >= list->db_entries)
@@ -123,6 +140,7 @@ struct alert_t *ids_remove(struct ids_database *list, int index)
     }
 
     list->db_entries--;
+    // Clear the duplicate pointer left in the newly unused slot.
     list->alert_ptr[list->db_entries] = NULL;
     if (list->db_entries < list->db_size * .2 && list->db_size / 2 >= list->init_size)
     {
@@ -138,6 +156,7 @@ struct alert_t *ids_remove(struct ids_database *list, int index)
     return retVal;
 }
 
+/* Return 1 if no records are stored, otherwise 0. Requires a valid list. */
 int ids_empty(struct ids_database *list)
 {
     if (list->alert_ptr[0] != NULL)
@@ -147,6 +166,7 @@ int ids_empty(struct ids_database *list)
     return list->db_entries == 0;
 }
 
+/* Return the number of stored records, or -1 if list is NULL. */
 int ids_count(struct ids_database *list)
 {
     if (list == NULL)
@@ -156,6 +176,7 @@ int ids_count(struct ids_database *list)
     return list->db_entries;
 }
 
+/* Return allocated pointer capacity, including unused slots, or -1 for NULL. */
 int ids_size(struct ids_database *list)
 {
     if (list == NULL)

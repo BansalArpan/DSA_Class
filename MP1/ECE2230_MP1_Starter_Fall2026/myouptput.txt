@@ -1,0 +1,154 @@
+Welcome to lab1. Using list size: 2
+ALERT
+LISTGEN x, LISTIP x
+DELGEN x, DELIP x
+SCANGEN x
+PRINT
+QUIT
+# # Run with initial capacity 2: ./lab1 2 < tests/edge_combinations_2.txt
+# # Empty list: print, look up, delete, and scan. Nothing should crash.
+List empty. DB size is 2
+Did not find alert: 5
+Did not find destination IP: 100
+Did not remove alert type: 5
+Did not remove any alert with IP: 100
+No records with >= 1 matches
+List empty. DB size is 2
+# # Add one record, then a lower ID. The list is now full and sorted 5,9.
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 9
+A set with generator 9 has 1 alerts
+Found 1 sets with at least 1 matches
+[9:101:1] (gen, sig, rev): Dest IP: 100, Src: 10, Dest port: 80, Src: 1001, Time: 1
+Found 1 matching generator alerts 9
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 5
+List has 2 records. DB size is 2
+1: [5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+2: [9:101:1] (gen, sig, rev): Dest IP: 100, Src: 10, Dest port: 80, Src: 1001, Time: 1
+# # Add to a full list: capacity doubles to 4. Duplicate 5 follows older 5.
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 5 and doubled list size
+[5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+[5:103:1] (gen, sig, rev): Dest IP: 100, Src: 12, Dest port: 80, Src: 1003, Time: 3
+Found 2 matching generator alerts 5
+[5:103:1] (gen, sig, rev): Dest IP: 100, Src: 12, Dest port: 80, Src: 1003, Time: 3
+[9:101:1] (gen, sig, rev): Dest IP: 100, Src: 10, Dest port: 80, Src: 1001, Time: 1
+Found 2 alerts matching IP 100
+List has 3 records. DB size is 4
+1: [5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+2: [5:103:1] (gen, sig, rev): Dest IP: 100, Src: 12, Dest port: 80, Src: 1003, Time: 3
+3: [9:101:1] (gen, sig, rev): Dest IP: 100, Src: 10, Dest port: 80, Src: 1001, Time: 1
+# # Fill capacity 4, then grow to 8. Insert at the front and at the end.
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 1
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 12 and doubled list size
+# # Add a third 5 with a distinct signature and timestamp to check stable order.
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 5
+List has 6 records. DB size is 8
+1: [1:104:1] (gen, sig, rev): Dest IP: 100, Src: 13, Dest port: 22, Src: 1004, Time: 4
+2: [5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+3: [5:103:1] (gen, sig, rev): Dest IP: 100, Src: 12, Dest port: 80, Src: 1003, Time: 3
+4: [5:106:1] (gen, sig, rev): Dest IP: 200, Src: 15, Dest port: 80, Src: 1006, Time: 6
+5: [9:101:1] (gen, sig, rev): Dest IP: 100, Src: 10, Dest port: 80, Src: 1001, Time: 1
+6: [12:105:1] (gen, sig, rev): Dest IP: 300, Src: 14, Dest port: 443, Src: 1005, Time: 5
+# # Expected groups: ID 1 has 1, ID 5 has 3, ID 9 has 1, ID 12 has 1.
+A set with generator 1 has 1 alerts
+A set with generator 5 has 3 alerts
+A set with generator 9 has 1 alerts
+A set with generator 12 has 1 alerts
+Found 4 sets with at least 1 matches
+A set with generator 5 has 3 alerts
+Found 1 sets with at least 2 matches
+A set with generator 5 has 3 alerts
+Found 1 sets with at least 3 matches
+No records with >= 4 matches
+Did not find alert: 999
+Did not find destination IP: 999
+Did not remove alert type: 999
+Did not remove any alert with IP: 999
+List has 6 records. DB size is 8
+1: [1:104:1] (gen, sig, rev): Dest IP: 100, Src: 13, Dest port: 22, Src: 1004, Time: 4
+2: [5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+3: [5:103:1] (gen, sig, rev): Dest IP: 100, Src: 12, Dest port: 80, Src: 1003, Time: 3
+4: [5:106:1] (gen, sig, rev): Dest IP: 200, Src: 15, Dest port: 80, Src: 1006, Time: 6
+5: [9:101:1] (gen, sig, rev): Dest IP: 100, Src: 10, Dest port: 80, Src: 1001, Time: 1
+6: [12:105:1] (gen, sig, rev): Dest IP: 300, Src: 14, Dest port: 443, Src: 1005, Time: 5
+# # Delete nonadjacent IP matches (IDs 1,5,9). Survivors are 5,5,12.
+Removed 3 alerts matching IP 100
+Did not find destination IP: 100
+[5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+[5:106:1] (gen, sig, rev): Dest IP: 200, Src: 15, Dest port: 80, Src: 1006, Time: 6
+Found 2 matching generator alerts 5
+List has 3 records. DB size is 8
+1: [5:102:1] (gen, sig, rev): Dest IP: 200, Src: 11, Dest port: 443, Src: 1002, Time: 2
+2: [5:106:1] (gen, sig, rev): Dest IP: 200, Src: 15, Dest port: 80, Src: 1006, Time: 6
+3: [12:105:1] (gen, sig, rev): Dest IP: 300, Src: 14, Dest port: 443, Src: 1005, Time: 5
+A set with generator 5 has 2 alerts
+Found 1 sets with at least 2 matches
+# # Delete adjacent duplicates. One record remains; capacity shrinks to 4.
+Removed 2 matching generator alerts 5
+    Reduced size of database to 4
+Did not remove alert type: 5
+Did not find alert: 5
+List has 1 records. DB size is 4
+1: [12:105:1] (gen, sig, rev): Dest IP: 300, Src: 14, Dest port: 443, Src: 1005, Time: 5
+A set with generator 12 has 1 alerts
+Found 1 sets with at least 1 matches
+No records with >= 2 matches
+# # Delete the last record. Capacity returns to the initial minimum of 2.
+Removed 1 alerts matching IP 300
+    Reduced size of database to 2
+List empty. DB size is 2
+Did not remove any alert with IP: 300
+Did not remove alert type: 12
+Did not find alert: 12
+Did not find destination IP: 300
+No records with >= 1 matches
+# # Reuse the empty list, including generator ID zero.
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 0
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 2
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 0 and doubled list size
+List has 3 records. DB size is 4
+1: [0:107:1] (gen, sig, rev): Dest IP: 400, Src: 16, Dest port: 80, Src: 1007, Time: 7
+2: [0:109:1] (gen, sig, rev): Dest IP: 500, Src: 18, Dest port: 80, Src: 1009, Time: 9
+3: [2:108:1] (gen, sig, rev): Dest IP: 500, Src: 17, Dest port: 443, Src: 1008, Time: 8
+[0:107:1] (gen, sig, rev): Dest IP: 400, Src: 16, Dest port: 80, Src: 1007, Time: 7
+[0:109:1] (gen, sig, rev): Dest IP: 500, Src: 18, Dest port: 80, Src: 1009, Time: 9
+Found 2 matching generator alerts 0
+A set with generator 0 has 2 alerts
+A set with generator 2 has 1 alerts
+Found 2 sets with at least 1 matches
+A set with generator 0 has 2 alerts
+Found 1 sets with at least 2 matches
+# # Delete the final sorted entry, then all remaining entries sharing ID zero.
+Removed 1 matching generator alerts 2
+List has 2 records. DB size is 4
+1: [0:107:1] (gen, sig, rev): Dest IP: 400, Src: 16, Dest port: 80, Src: 1007, Time: 7
+2: [0:109:1] (gen, sig, rev): Dest IP: 500, Src: 18, Dest port: 80, Src: 1009, Time: 9
+Removed 2 matching generator alerts 0
+    Reduced size of database to 2
+List empty. DB size is 2
+Did not find destination IP: 500
+No records with >= 1 matches
+# # Quit with a live record to exercise destructor cleanup.
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 7
+List has 1 records. DB size is 2
+1: [7:110:1] (gen, sig, rev): Dest IP: 700, Src: 19, Dest port: 22, Src: 1010, Time: 10
+cleanup

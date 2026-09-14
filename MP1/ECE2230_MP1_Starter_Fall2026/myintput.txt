@@ -1,0 +1,159 @@
+# Run with initial capacity 2: ./lab1 2 < tests/edge_combinations_2.txt
+# Empty list: print, look up, delete, and scan. Nothing should crash.
+PRINT
+LISTGEN 5
+LISTIP 100
+DELGEN 5
+DELIP 100
+SCANGEN 1
+PRINT
+# Add one record, then a lower ID. The list is now full and sorted 5,9.
+ALERT
+9
+101
+1
+100
+10
+80
+1001
+1
+SCANGEN 1
+LISTGEN 9
+ALERT
+5
+102
+1
+200
+11
+443
+1002
+2
+PRINT
+# Add to a full list: capacity doubles to 4. Duplicate 5 follows older 5.
+ALERT
+5
+103
+1
+100
+12
+80
+1003
+3
+LISTGEN 5
+LISTIP 100
+PRINT
+# Fill capacity 4, then grow to 8. Insert at the front and at the end.
+ALERT
+1
+104
+1
+100
+13
+22
+1004
+4
+ALERT
+12
+105
+1
+300
+14
+443
+1005
+5
+# Add a third 5 with a distinct signature and timestamp to check stable order.
+ALERT
+5
+106
+1
+200
+15
+80
+1006
+6
+PRINT
+# Expected groups: ID 1 has 1, ID 5 has 3, ID 9 has 1, ID 12 has 1.
+SCANGEN 1
+SCANGEN 2
+SCANGEN 3
+SCANGEN 4
+LISTGEN 999
+LISTIP 999
+DELGEN 999
+DELIP 999
+PRINT
+# Delete nonadjacent IP matches (IDs 1,5,9). Survivors are 5,5,12.
+DELIP 100
+LISTIP 100
+LISTGEN 5
+PRINT
+SCANGEN 2
+# Delete adjacent duplicates. One record remains; capacity shrinks to 4.
+DELGEN 5
+DELGEN 5
+LISTGEN 5
+PRINT
+SCANGEN 1
+SCANGEN 2
+# Delete the last record. Capacity returns to the initial minimum of 2.
+DELIP 300
+PRINT
+DELIP 300
+DELGEN 12
+LISTGEN 12
+LISTIP 300
+SCANGEN 1
+# Reuse the empty list, including generator ID zero.
+ALERT
+0
+107
+1
+400
+16
+80
+1007
+7
+ALERT
+2
+108
+1
+500
+17
+443
+1008
+8
+ALERT
+0
+109
+1
+500
+18
+80
+1009
+9
+PRINT
+LISTGEN 0
+SCANGEN 1
+SCANGEN 2
+# Delete the final sorted entry, then all remaining entries sharing ID zero.
+DELGEN 2
+PRINT
+DELGEN 0
+PRINT
+LISTIP 500
+SCANGEN 1
+# Quit with a live record to exercise destructor cleanup.
+ALERT
+7
+110
+1
+700
+19
+22
+1010
+10
+PRINT
+QUIT
+# These commands must not execute after QUIT.
+PRINT
+DELGEN 7

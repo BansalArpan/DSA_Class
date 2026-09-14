@@ -1,46 +1,22 @@
-/* lab1.c template
- * Arpan Bansal                <<-- replace with your name!
- * abansal                      <<-- replace with your user name!
+/* lab1.c
+ * Arpan Bansal
+ * abansal
  * ECE 2230 Fall 2026
  * MP1
  *
- * NOTE:  You must update all of the following comments!
+ * Purpose: Read commands to add, find, delete, scan, and print alert records.
+ * Use the database functions to manage storage and preserve ordering.
  *
- * Purpose: A template for MP1
+ * Usage: ./lab1 list_size, where list_size is a positive integer capacity.
+ * Assumptions: Input contains complete commands and valid integer record
+ * fields. Allocations are successful, and a normal session ends with QUIT.
  *
- * Assumptions: Many details are incomplete.  The functions to collect input
- * for a record and to print a record specify the format that is required for
- * grading.
+ * Bugs: No known bugs.
  *
- * The program accepts one command line arguement that is the size of the list.
- *
- * An outline for the interactive menu input is provided.  Details need to be
- * completed but the format of the commands and the prints found in
- * ids_record_fill ids_print_rec should not be changed.
- *
- * Bugs: Many detail have not been implemented.
- *
- * See the ECE 2230 programming guide
- *
- * NOTE: if it forbidden to access any of the members in the ids_database
- * structure.   The member names MUST NOT be found in this file or it is a
- * design violation.  Instead you must utilize the ids_ fuctions found
- * in the ids.h header file to access any details of the list.
- *
- * One of the requirements is to verify you program does not have any
- * memory leaks or other errors that can be detected by valgrind.  Run with
- * your test scripts:
- *      valgrind --leak-check=full ./lab1 < your_test_script
- *
- * Are you unhappy with the way this code is formatted?  You can easily
- * reformat (and automatically indent) your code using the astyle
- * command.  If it is not installed use the Ubuntu Software Center to
- * install astyle.  Then in a terminal on the command line do
- *     astyle --style=kr lab1.c
- *
- * See "man astyle" for different styles.  Replace "kr" with one of
- * ansi, java, gnu, linux, or google to see different options.  Or, set up
- * your own style.
+ * The driver must use the public interface to access database state.
+ * The supplied record input/output formats and grading function are retained.
+ * Example memory check:
+ * valgrind --leak-check=full ./lab1 2 < myinput.txt
  */
 
 #include <stdlib.h>
@@ -77,7 +53,7 @@ int main(int argc, char **argv)
     printf("Welcome to lab1. Using list size: %d\n", list_size);
     printf("ALERT\nLISTGEN x, LISTIP x\nDELGEN x, DELIP x\nSCANGEN x\nPRINT\nQUIT\n");
 
-    // fix.  Don't forget to create the database using the ids_construct command
+    // Create the empty database using the requested initial capacity.
     struct ids_database *mydb = ids_construct(list_size);
 
     // remember fgets includes newline \n unless line too long
@@ -86,7 +62,7 @@ int main(int argc, char **argv)
         num_items = sscanf(line, "%s%d%s", command, &input_number, junk);
         if (num_items == 1 && strcmp(command, "QUIT") == 0)
         {
-            /* found exit */
+            /* Free all remaining records before leaving the command loop. */
             printf("cleanup\n");
             ids_destruct(mydb);
             break;
@@ -96,8 +72,7 @@ int main(int argc, char **argv)
             new_rec = (struct alert_t *)malloc(sizeof(struct alert_t));
             ids_record_fill(new_rec);
 
-            // you have to figure out what goes here
-            // and call the correct printf command
+            // A successful addition adds the record to the database.
             int add_return = ids_add(mydb, new_rec);
 
             if (add_return == 1)
@@ -125,13 +100,12 @@ int main(int argc, char **argv)
                 if (ids_access(mydb, i)->generator_id == input_number)
                 {
                     new_rec = ids_access(mydb, i);
-                    // First, print each of the matching alerts and count the number found
-                    // fix
+                    // borrows the record without removing or freeing it.
                     ids_print_rec(new_rec);
                     found++;
                 }
             }
-            // once the number of matches is found, print message
+            // Report the number of matching records, including the no-match case.
             if (found == 0)
             {
                 printf("Did not find alert: %d\n", input_number);
@@ -151,13 +125,13 @@ int main(int argc, char **argv)
                 if (ids_access(mydb, i)->dest_ip_addr == input_number)
                 {
                     new_rec = ids_access(mydb, i);
-                    // First, print each of the matching alerts and count the number found
+                    // Print each matching record and count it without changing the list.
                     ids_print_rec(new_rec);
                     found++;
                 }
             }
 
-            // once the number of matches is found, print message
+            // Report the number of matching records, including the no-match case.
             if (found == 0)
             {
                 printf("Did not find destination IP: %d\n", input_number);
@@ -170,14 +144,15 @@ int main(int argc, char **argv)
         }
         else if (num_items == 2 && strcmp(command, "DELGEN") == 0)
         {
-            int old_db_size = ids_size(mydb); // before any changes save size of database
+            int old_db_size = ids_size(mydb); // Save capacity for the grading check.
             int found = 0;
-            // int db_count = ids_count(mydb);
             int i = 0;
+            // Removal shifts records left.
             while (i < ids_count(mydb))
             {
                 if (ids_access(mydb, i)->generator_id == input_number)
                 {
+                    // Removes the record and frees the memory for it.
                     free(ids_remove(mydb, i));
                     found++;
                 }
@@ -195,21 +170,21 @@ int main(int argc, char **argv)
             else
             {
                 printf("Removed %d matching generator alerts %d\n", found, input_number);
-                // But, do not print each packet
-                // this function is for grading.  Do not change it
+                // Report capacity changes using the supplied grading function.
                 grading_db_size(mydb, old_db_size, list_size);
             }
         }
         else if (num_items == 2 && strcmp(command, "DELIP") == 0)
         {
-            int old_db_size = ids_size(mydb); // before any changes save size of database
+            int old_db_size = ids_size(mydb); // Save capacity for the grading check.
             int found = 0;
-            // int db_count = ids_count(mydb);
             int i = 0;
+            // Removal shifts records left.
             while (i < ids_count(mydb))
             {
                 if (ids_access(mydb, i)->dest_ip_addr == input_number)
                 {
+                    // Removes the record and frees the memory for it.
                     free(ids_remove(mydb, i));
                     found++;
                 }
@@ -225,31 +200,31 @@ int main(int argc, char **argv)
             else
             {
                 printf("Removed %d alerts matching IP %d\n", found, input_number);
-                // But, do not print each packet
-                // this function is for grading.  Do not change it
+                // Report capacity changes using the supplied grading function.
                 grading_db_size(mydb, old_db_size, list_size);
             }
         }
         else if (num_items == 2 && strcmp(command, "SCANGEN") == 0)
         {
-            // for the SCANGEN command the input_number is the threshold
-            // and is stored in input_number
+            // input_number is the threshold to report.
             int matches = 0;
             int gen_id = 0;
             int groups = 0;
 
             int db_size = ids_count(mydb);
-            // loop to find gen_ids with input_number or more matches
+            // Equal generator IDs are consecutive, so count one group at a time.
             for (int i = 0; i < db_size; i++)
             {
                 if (ids_access(mydb, i) == NULL)
                 {
                     break;
                 }
+                // Capture the first ID even when the group contains one record.
                 if (matches == 0)
                 {
                     gen_id = ids_access(mydb, i)->generator_id;
                 }
+                // Check the bound before reading the next record.
                 if (i + 1 < db_size && ids_access(mydb, i)->generator_id == (ids_access(mydb, i + 1)->generator_id))
                 {
                     matches++;
@@ -260,7 +235,7 @@ int main(int argc, char **argv)
                     if (matches >= input_number)
                     {
                         groups++;
-                        // for each group that is found print the number of matches
+                        // The group is complete; report it if it meets the threshold.
                         printf("A set with generator %d has %d alerts\n", gen_id, matches);
                     }
                     gen_id = 0;
@@ -268,7 +243,7 @@ int main(int argc, char **argv)
                 }
             }
 
-            // after all sets have been found print how many sets
+            // Summarize the number of qualifying groups.
             if (groups > 0)
             {
                 printf("Found %d sets with at least %d matches\n", groups, input_number);
@@ -280,8 +255,8 @@ int main(int argc, char **argv)
         }
         else if (num_items == 1 && strcmp(command, "PRINT") == 0)
         {
-            int num_in_list = ids_count(mydb); // fix!
-            int array_size = ids_size(mydb);   // fix!
+            int num_in_list = ids_count(mydb); // Occupied entries
+            int array_size = ids_size(mydb);   // Allocated capacity
             if (num_in_list == 0)
             {
                 printf("List empty. DB size is %d\n", array_size);
@@ -293,7 +268,7 @@ int main(int argc, char **argv)
                 for (i = 0; i < num_in_list; i++)
                 {
                     printf("%d: ", i + 1);
-                    // you must use the ids_print_rec function to format output
+                    // Display positions start at 1; database indices start at 0.
                     new_rec = ids_access(mydb, i);
                     ids_print_rec(new_rec);
                 }

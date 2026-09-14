@@ -1,5 +1,5 @@
 /* ids.h template
- * Arpan Bansal          <<-- you must change these details!
+ * Arpan Bansal
  * ECE 2230 Fall 2026
  * MP1
  *
@@ -10,9 +10,8 @@
  * this assignmnet and cannot be changed.
  *
  * Bugs:
+ *  No known bugs.
  *
- * You can change the ids_database structure and you must change the comments.
- * No other changes are permitted to this file.
  */
 
 #define MAXLINE 100
