@@ -1,0 +1,110 @@
+Welcome to lab1. Using list size: 4
+ALERT
+LISTGEN x, LISTIP x
+DELGEN x, DELIP x
+SCANGEN x
+PRINT
+QUIT
+# Prof. Harlan Russell
+# ECE 2230, MP1, Fall 2025
+# t08addremove_4
+# 
+# insert and remove 4 records.  Repeat test with IP 
+# 
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 17
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 15
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 13
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 11
+# 
+#   print list with 4 items
+# 
+List has 4 records. DB size is 4
+1: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 4
+2: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+3: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 2
+4: [17:1700:17] (gen, sig, rev): Dest IP: 1705, Src: 17, Dest port: 17, Src: 17, Time: 1
+# 
+#   delete 17
+# 
+Removed 1 matching generator alerts 17
+List has 3 records. DB size is 4
+1: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 4
+2: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+3: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 2
+# 
+#   delete 11
+# 
+Removed 1 matching generator alerts 11
+List has 2 records. DB size is 4
+1: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+2: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 2
+# 
+#   delete 15
+# 
+Removed 1 matching generator alerts 15
+List has 1 records. DB size is 4
+1: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+# 
+#   delete 13
+# 
+Removed 1 matching generator alerts 13
+List empty. DB size is 4
+# 
+#   Start over with same list but now delete based on IP address
+# 
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 17
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 15
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 13
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 11
+# 
+#   print list with 4 items
+# 
+List has 4 records. DB size is 4
+1: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 4
+2: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+3: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 2
+4: [17:1700:17] (gen, sig, rev): Dest IP: 1705, Src: 17, Dest port: 17, Src: 17, Time: 1
+# 
+#   delete 1705
+# 
+Removed 1 alerts matching IP 1705
+List has 3 records. DB size is 4
+1: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 4
+2: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+3: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 2
+# 
+#   delete 1105
+# 
+Removed 1 alerts matching IP 1105
+List has 2 records. DB size is 4
+1: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+2: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 2
+# 
+#   delete 1505
+# 
+Removed 1 alerts matching IP 1505
+List has 1 records. DB size is 4
+1: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 3
+# 
+#   delete 1305
+# 
+Removed 1 alerts matching IP 1305
+List empty. DB size is 4
+# 
+cleanup

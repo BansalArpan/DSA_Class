@@ -1,0 +1,32 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t13nomatches_5
+
+Commands on records not in list 
+
+ALERT
+113
+100
+1
+1500
+2
+1
+1
+1
+ALERT
+111
+100
+1
+1500
+2
+1
+1
+2
+LISTGEN 222
+LISTIP 333
+DELGEN 444
+DELIP 555
+SCANGEN 100
+PRINT
+QUIT
+

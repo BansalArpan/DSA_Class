@@ -1,0 +1,113 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t06ninereqs_9
+
+req 9 records already in order
+
+ALERT
+3
+300
+3
+3505
+3
+3
+3
+3
+ALERT
+5
+500
+5
+5505
+5
+5
+5
+5
+ 
+  List after insert 3 and 5
+ 
+PRINT
+
+ALERT
+7
+700
+7
+7505
+7
+7
+7
+7
+ALERT
+9
+900
+9
+9505
+9
+9
+9
+9
+ALERT
+11
+1100
+11
+1105
+11
+11
+11
+11
+ALERT
+13
+1300
+13
+1305
+13
+13
+13
+13
+ALERT
+15
+1500
+15
+1505
+15
+15
+15
+15
+ALERT
+17
+1700
+17
+1705
+17
+17
+17
+17
+ 
+  list after insert 3, 5, 7, 8, 11, 13, 15, 17
+
+PRINT
+ALERT
+19
+1900
+19
+1905
+19
+19
+19
+19
+
+  full list with 9 items
+
+PRINT
+
+  find first item
+
+LISTGEN 3
+LISTIP 3505
+
+  find last item
+
+LISTGEN 19
+LISTIP 1905
+
+QUIT
+

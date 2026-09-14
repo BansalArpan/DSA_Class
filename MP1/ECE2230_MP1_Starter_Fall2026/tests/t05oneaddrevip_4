@@ -1,0 +1,20 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t05oneaddremip_4
+
+single remove no leak
+
+ALERT
+555
+100
+5
+1505
+5
+5
+5
+5
+LISTIP 1505
+DELIP 1505
+LISTIP 1505
+QUIT
+

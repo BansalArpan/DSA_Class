@@ -1,0 +1,19 @@
+Welcome to lab1. Using list size: 2
+ALERT
+LISTGEN x, LISTIP x
+DELGEN x, DELIP x
+SCANGEN x
+PRINT
+QUIT
+# Prof. Harlan Russell
+# ECE 2230, MP1, Fall 2025
+# t02onereq_2
+# 
+# Tests for empty list to check construct and destruct 
+# 
+# single insert no leak
+# 
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 111
+cleanup

@@ -1,0 +1,8 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t01emptylist_10
+
+Tests for case when the list is empty.  Only construct and destruct are called
+
+QUIT
+

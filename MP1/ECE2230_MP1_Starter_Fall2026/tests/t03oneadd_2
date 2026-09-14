@@ -1,0 +1,20 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2024
+t03oneadd_4
+
+single insert and list no leak
+
+ALERT
+333
+100
+3
+1503
+3
+3
+3
+3
+LISTGEN 333 
+LISTIP 1503
+PRINT
+QUIT
+

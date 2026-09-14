@@ -1,0 +1,19 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t02onereq_2
+
+Tests for empty list to check construct and destruct 
+
+single insert no leak
+
+ALERT
+111
+100
+1
+1500
+2
+1
+1
+1
+QUIT
+

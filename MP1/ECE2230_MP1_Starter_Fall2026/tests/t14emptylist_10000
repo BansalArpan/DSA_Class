@@ -1,0 +1,14 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t14emptylist_10000
+
+Tests for case when the list is empty 
+
+LISTGEN 222
+LISTIP 333
+DELGEN 444
+DELIP 555
+SCANGEN 100
+PRINT
+QUIT
+

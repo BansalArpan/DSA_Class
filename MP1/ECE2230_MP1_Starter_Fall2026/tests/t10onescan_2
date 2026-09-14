@@ -1,0 +1,27 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2024
+t10onescan_2
+
+single insert and list no leak
+
+ALERT
+333
+100
+3
+1503
+3
+3
+3
+3
+PRINT
+  
+  scan for 1 record
+
+SCANGEN 1
+
+  scan for 2 records
+
+SCANGEN 2
+
+QUIT
+

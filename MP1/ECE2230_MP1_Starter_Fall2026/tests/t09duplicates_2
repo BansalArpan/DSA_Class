@@ -1,0 +1,102 @@
+Prof. Harlan Russell
+ECE 2230, MP1, Fall 2025
+t09duplicates_2
+
+insert and remove 4 records.  Repeat test with IP 
+
+ALERT
+17
+1700
+17
+1705
+17
+17
+17
+1
+ALERT
+17
+1500
+15
+1505
+15
+15
+15
+2
+ALERT
+17
+1300
+13
+1305
+13
+13
+13
+3
+ALERT
+17
+1100
+11
+1105
+11
+11
+11
+4
+
+  print list with 4 items
+
+PRINT
+
+  delete 17
+
+DELGEN 17
+PRINT
+
+  Start over with same list but now delete based on IP address
+
+ALERT
+15
+1700
+17
+1234
+17
+17
+17
+1
+ALERT
+15
+1500
+15
+1234
+15
+15
+15
+2
+ALERT
+15
+1300
+13
+1234
+13
+13
+13
+3
+ALERT
+15
+1100
+11
+1234
+11
+11
+11
+4
+
+  print list with 4 items
+
+PRINT
+
+  delete 1234
+
+DELIP 1234
+PRINT
+
+QUIT
+

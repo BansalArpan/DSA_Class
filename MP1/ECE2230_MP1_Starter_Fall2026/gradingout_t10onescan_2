@@ -1,0 +1,29 @@
+Welcome to lab1. Using list size: 2
+ALERT
+LISTGEN x, LISTIP x
+DELGEN x, DELIP x
+SCANGEN x
+PRINT
+QUIT
+# Prof. Harlan Russell
+# ECE 2230, MP1, Fall 2024
+# t10onescan_2
+# 
+# single insert and list no leak
+# 
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 333
+List has 1 records. DB size is 2
+1: [333:100:3] (gen, sig, rev): Dest IP: 1503, Src: 3, Dest port: 3, Src: 3, Time: 3
+#   
+#   scan for 1 record
+# 
+A set with generator 333 has 1 alerts
+Found 1 sets with at least 1 matches
+# 
+#   scan for 2 records
+# 
+No records with >= 2 matches
+# 
+cleanup

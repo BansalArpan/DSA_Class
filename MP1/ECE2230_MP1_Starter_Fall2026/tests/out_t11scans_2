@@ -1,0 +1,125 @@
+Welcome to lab1. Using list size: 2
+ALERT
+LISTGEN x, LISTIP x
+DELGEN x, DELIP x
+SCANGEN x
+PRINT
+QUIT
+# Prof. Harlan Russell
+# ECE 2230, MP1, Fall 2025
+# t11scans_2
+# 
+# 17 records 
+# 
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 15
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 13
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 19 and doubled list size
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 17
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 17 and doubled list size
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 13
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 11
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 15
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 19 and doubled list size
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 17
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 13
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 11
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 21
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 19
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 19
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 11
+Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
+
+Added: 11 and doubled list size
+# 
+#   print list with 17 items
+# 
+List has 17 records. DB size is 32
+1: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 7
+2: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 12
+3: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 16
+4: [11:1100:11] (gen, sig, rev): Dest IP: 1105, Src: 11, Dest port: 11, Src: 11, Time: 17
+5: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 2
+6: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 6
+7: [13:1300:13] (gen, sig, rev): Dest IP: 1305, Src: 13, Dest port: 13, Src: 13, Time: 11
+8: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 1
+9: [15:1500:15] (gen, sig, rev): Dest IP: 1505, Src: 15, Dest port: 15, Src: 15, Time: 8
+10: [17:1700:17] (gen, sig, rev): Dest IP: 1705, Src: 17, Dest port: 17, Src: 17, Time: 4
+11: [17:1700:17] (gen, sig, rev): Dest IP: 1705, Src: 17, Dest port: 17, Src: 17, Time: 5
+12: [17:1700:17] (gen, sig, rev): Dest IP: 1705, Src: 17, Dest port: 17, Src: 17, Time: 10
+13: [19:1900:19] (gen, sig, rev): Dest IP: 1905, Src: 19, Dest port: 19, Src: 19, Time: 3
+14: [19:1900:19] (gen, sig, rev): Dest IP: 1906, Src: 19, Dest port: 19, Src: 19, Time: 9
+15: [19:1900:19] (gen, sig, rev): Dest IP: 1907, Src: 19, Dest port: 19, Src: 19, Time: 14
+16: [19:1900:19] (gen, sig, rev): Dest IP: 1908, Src: 19, Dest port: 19, Src: 19, Time: 15
+17: [21:2100:21] (gen, sig, rev): Dest IP: 2105, Src: 21, Dest port: 21, Src: 21, Time: 13
+# 
+#   scan for 5 alerts
+# 
+No records with >= 5 matches
+# 
+#   scan for 4 alerts
+# 
+A set with generator 11 has 4 alerts
+A set with generator 19 has 4 alerts
+Found 2 sets with at least 4 matches
+# 
+#   scan for 3 alerts
+# 
+A set with generator 11 has 4 alerts
+A set with generator 13 has 3 alerts
+A set with generator 17 has 3 alerts
+A set with generator 19 has 4 alerts
+Found 4 sets with at least 3 matches
+#   
+#   scan for 2 alerts
+# 
+A set with generator 11 has 4 alerts
+A set with generator 13 has 3 alerts
+A set with generator 15 has 2 alerts
+A set with generator 17 has 3 alerts
+A set with generator 19 has 4 alerts
+Found 5 sets with at least 2 matches
+# 
+#   Scan for 1 alerts
+# 
+A set with generator 11 has 4 alerts
+A set with generator 13 has 3 alerts
+A set with generator 15 has 2 alerts
+A set with generator 17 has 3 alerts
+A set with generator 19 has 4 alerts
+A set with generator 21 has 1 alerts
+Found 6 sets with at least 1 matches
+# 
+# 
+cleanup
