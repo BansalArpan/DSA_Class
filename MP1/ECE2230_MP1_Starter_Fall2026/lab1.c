@@ -16,7 +16,7 @@
  * The driver must use the public interface to access database state.
  * The supplied record input/output formats and grading function are retained.
  * Example memory check:
- * valgrind --leak-check=full ./lab1 2 < myinput.txt
+ * valgrind --leak-check=full ./lab1 2 < mytestinput
  */
 
 #include <stdlib.h>
