@@ -1,23 +1,23 @@
 /* ids_support.h
- * Your Name         <--- replace with your name
- * your_username     <--- replace with your Clemson username
+ * Arpan Bansal
+ * abansal
  * ECE 2230 Fall 2026
  * MP2
  *
- * Purpose: A template for MP2 
+ * Purpose: A template for MP2
  *
- * Assumptions: suggested structure definitions and public functions 
- *              as defined for assignment.  
+ * Assumptions: suggested structure definitions and public functions
+ *              as defined for assignment.
  *
  *              I have provided prototypes of some of the functions
  *              and you CANNOT change these prototypes
  *
  *              All function prototypes in this file must start with the prefix
- *              ids_ and are public.  
+ *              ids_ and are public.
  *
  * Bugs:
  *
- * (You CANNOT modify any of the details of the llist.h interface, or use any 
+ * (You CANNOT modify any of the details of the llist.h interface, or use any
  *  of the private variables outside of llist.c.)
  */
 
