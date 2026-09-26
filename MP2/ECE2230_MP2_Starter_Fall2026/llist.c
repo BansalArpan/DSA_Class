@@ -171,6 +171,7 @@ void llist_destruct(llist_t *list_ptr)
         free(rover);
         rover = next;
     }
+    free(list_ptr);
 }
 
 /* Inserts the specified data element into the specified list at the specified
@@ -201,15 +202,46 @@ void llist_insert(llist_t *list_ptr, data_t *elem_ptr, int pos_index)
     assert(list_ptr != NULL);
     assert(pos_index == LLPOSITION_FRONT || pos_index == LLPOSITION_BACK || pos_index >= 0);
     // note you MUST handle the case that pos_index is LLPOSITION_FRONT or BACK
+    llist_elem_t *new_elem = (llist_elem_t *)malloc(sizeof(llist_elem_t));
+    new_elem->data_ptr = elem_ptr;
 
-    if (pos_index == LLPOSITION_BACK || pos_index >= list_ptr->ll_entry_count - 1)
+    if (list_ptr->ll_entry_count == 0)
     {
-        list_ptr->ll_back->ll_next = elem_ptr;
-        elem_ptr = list_ptr->ll_back;
-        list_ptr->ll_back = elem_ptr;
-        list_ptr->ll_back->ll_next = NULL;
+        list_ptr->ll_front = new_elem;
+        list_ptr->ll_back = new_elem;
+        new_elem->ll_prev = NULL;
+        new_elem->ll_next = NULL;
+        list_ptr->ll_entry_count++;
     }
-
+    else if (pos_index == LLPOSITION_FRONT || pos_index == 0)
+    {
+        new_elem->ll_next = list_ptr->ll_front;
+        new_elem->ll_prev = NULL;
+        list_ptr->ll_front->ll_prev = new_elem;
+        list_ptr->ll_front = new_elem;
+        list_ptr->ll_entry_count++;
+    }
+    else if (pos_index == LLPOSITION_BACK || pos_index >= list_ptr->ll_entry_count)
+    {
+        new_elem->ll_prev = list_ptr->ll_back;
+        new_elem->ll_next = NULL;
+        list_ptr->ll_back->ll_next = new_elem;
+        list_ptr->ll_back = new_elem;
+        list_ptr->ll_entry_count++;
+    }
+    else
+    {
+        llist_elem_t *rover = list_ptr->ll_front;
+        for (int i = 0; i < pos_index - 1; i++)
+        {
+            rover = rover->ll_next;
+        }
+        new_elem->ll_next = rover->ll_next;
+        new_elem->ll_prev = rover;
+        rover->ll_next->ll_prev = new_elem;
+        rover->ll_next = new_elem;
+        list_ptr->ll_entry_count++;
+    }
     // the last three lines of this function must be the following
     if (list_ptr->ll_sorted_state == LLIST_SORTED)
         list_ptr->ll_sorted_state = LLIST_UNSORTED;
@@ -249,9 +281,42 @@ void llist_insert_sorted(llist_t *list_ptr, data_t *elem_ptr)
     assert(list_ptr != NULL);
     assert(list_ptr->ll_sorted_state == LLIST_SORTED);
 
-    // insert your code here
+    llist_elem_t *new_elem = (llist_elem_t *)malloc(sizeof(llist_elem_t));
+    new_elem->data_ptr = elem_ptr;
 
-    // the last line checks if the new list is correct
+    if (list_ptr->ll_entry_count == 0)
+    {
+        list_ptr->ll_front = new_elem;
+        list_ptr->ll_back = new_elem;
+        new_elem->ll_prev = NULL;
+        new_elem->ll_next = NULL;
+        list_ptr->ll_entry_count++;
+        llist_debug_validate(list_ptr);
+        return;
+    }
+
+    for (llist_elem_t *rover = list_ptr->ll_front; rover != NULL; rover = rover->ll_next)
+    {
+        if (list_ptr->compare_fun(elem_ptr, rover->data_ptr) == 1)
+        {
+            new_elem->ll_next = rover;
+            new_elem->ll_prev = rover->ll_prev;
+            if (rover->ll_prev != NULL)
+                rover->ll_prev->ll_next = new_elem;
+            else
+                list_ptr->ll_front = new_elem;
+            rover->ll_prev = new_elem;
+            list_ptr->ll_entry_count++;
+            llist_debug_validate(list_ptr);
+            return;
+        }
+    }
+    // New element belongs at the end
+    new_elem->ll_prev = list_ptr->ll_back;
+    new_elem->ll_next = NULL;
+    list_ptr->ll_back->ll_next = new_elem;
+    list_ptr->ll_back = new_elem;
+    list_ptr->ll_entry_count++;
     llist_debug_validate(list_ptr);
 }
 
@@ -274,11 +339,67 @@ data_t *llist_remove(llist_t *list_ptr, int pos_index)
     assert(pos_index == LLPOSITION_FRONT || pos_index == LLPOSITION_BACK || pos_index >= 0);
     // note you MUST handle the case that pos_index is LLPOSITION_FRONT or BACK
 
-    // insert your code here
+    data_t *data = NULL;
+    if (list_ptr->ll_entry_count == 0) // Empty list
+    {
+        // Will skip to the end, returning NULL since there is nothing to remove
+    }
+    else if (pos_index == LLPOSITION_FRONT || pos_index == 0) // Remove from front
+    {
+        llist_elem_t *to_remove = list_ptr->ll_front;
+        data = to_remove->data_ptr;
+        list_ptr->ll_front = to_remove->ll_next;
+        if (list_ptr->ll_front != NULL)
+        {
+            list_ptr->ll_front->ll_prev = NULL;
+        }
+        else
+        {
+            list_ptr->ll_back = NULL; // List is now empty
+        }
+        free(to_remove);
+        list_ptr->ll_entry_count--;
+    }
+    else if (pos_index == LLPOSITION_BACK || pos_index == list_ptr->ll_entry_count - 1) // Remove from back
+    {
+        llist_elem_t *to_remove = list_ptr->ll_back;
+        data = to_remove->data_ptr;
+        list_ptr->ll_back = to_remove->ll_prev;
+        if (list_ptr->ll_back != NULL)
+        {
+            list_ptr->ll_back->ll_next = NULL;
+        }
+        else
+        {
+            list_ptr->ll_front = NULL; // List is now empty
+        }
+        free(to_remove);
+        list_ptr->ll_entry_count--;
+    }
+    else if (pos_index > 0 && pos_index < list_ptr->ll_entry_count - 1) // Remove index in the middle of the list
+    {
+
+        llist_elem_t *rover = list_ptr->ll_front;
+        for (int i = 0; i < pos_index; i++)
+        {
+            rover = rover->ll_next;
+        }
+        data = rover->data_ptr;
+        if (rover->ll_prev != NULL)
+        {
+            rover->ll_prev->ll_next = rover->ll_next;
+        }
+        if (rover->ll_next != NULL)
+        {
+            rover->ll_next->ll_prev = rover->ll_prev;
+        }
+        free(rover);
+        list_ptr->ll_entry_count--;
+    }
 
     // the last line should verify the list is valid after the remove
     llist_debug_validate(list_ptr);
-    return NULL; // you must fix the return value
+    return data; // returns the pointer to the data that was removed from the list
 }
 
 /* Obtains the length of the specified list, that is, the number of elements
