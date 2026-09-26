@@ -98,7 +98,7 @@ int ids_match_destip(const alert_t *rec_a, const alert_t *rec_b)
 void ids_print(llist_t *list_ptr, const char *list_type)
 {
     assert(strcmp(list_type, "List") == 0 || strcmp(list_type, "Queue") == 0);
-    int num_in_list = 0; // fix!
+    int num_in_list = llist_entries(list_ptr);
     int index;
     if (num_in_list == 0)
     {
@@ -112,8 +112,7 @@ void ids_print(llist_t *list_ptr, const char *list_type)
     for (index = 0; index < num_in_list; index++)
     {
         printf("%d: ", index + 1);
-        // you must use the ids_print_rec function to format output
-        alert_t *rec_ptr = NULL; // fix
+        alert_t *rec_ptr = llist_access(list_ptr, index);
         ids_print_alert_rec(rec_ptr);
     }
     printf("\n");
@@ -133,11 +132,30 @@ void ids_add_rear(llist_t *list_ptr)
 {
     alert_t *new_ptr = (alert_t *)calloc(1, sizeof(alert_t));
     ids_record_fill(new_ptr);
+
+    int position = -1; // position of existing alert with same destination IP
+
+    // Check if there is an existing alert with the same destination IP
+    alert_t *existing_ptr = llist_elem_find(list_ptr, new_ptr, &position, ids_match_destip);
+
+    if (existing_ptr == NULL)
+    {
+        // if did not find a match in the list
+        llist_insert(list_ptr, new_ptr, LLPOSITION_BACK);
+        printf("Appended %d onto queue\n", new_ptr->dest_ip_addr);
+    }
+
+    else
+    {
+        existing_ptr = llist_remove(list_ptr, position);
+        free(existing_ptr);
+
+        llist_insert(list_ptr, new_ptr, LLPOSITION_BACK);
+        // else if found and removed a match in the list
+        printf("Appended %d onto queue and removed old copy\n", new_ptr->dest_ip_addr);
+    }
+
     // print one of the two following lines
-    // if did not find a match in the list
-    printf("Appended %d onto queue\n", new_ptr->dest_ip_addr);
-    // else if found and removed a match in the list
-    printf("Appended %d onto queue and removed old copy\n", new_ptr->dest_ip_addr);
 }
 
 /* This function removes the alert record at the front of the queue.  The
@@ -148,11 +166,16 @@ void ids_add_rear(llist_t *list_ptr)
 void ids_remove_front(llist_t *list_ptr)
 {
     alert_t *rec_ptr = NULL;
-
+    rec_ptr = llist_remove(list_ptr, LLPOSITION_FRONT);
     if (rec_ptr != NULL)
+    {
         printf("Deleted front with IP addr: %d\n", rec_ptr->dest_ip_addr);
+        free(rec_ptr);
+    }
     else
+    {
         printf("Queue empty, did not remove\n");
+    }
 }
 
 /* This creates a list and it can be either a sorted or unsorted list.
@@ -199,7 +222,7 @@ void ids_add(llist_t *list_ptr)
 {
     alert_t *new_ptr = (alert_t *)calloc(1, sizeof(alert_t));
     ids_record_fill(new_ptr);
-    // after the alert is added you must print
+    llist_insert_sorted(list_ptr, new_ptr);
     printf("Inserted %d into list\n", new_ptr->generator_id);
 }
 
@@ -210,8 +233,15 @@ void ids_add(llist_t *list_ptr)
 void ids_list_gen(llist_t *list_ptr, int gen_id)
 {
     int count = 0;
-    // First, you must print each of the matching alerts
-    // after printing each matching record, print one of these summaries
+    for (int index = 0; index < llist_entries(list_ptr); index++)
+    {
+        alert_t *rec_ptr = llist_access(list_ptr, index);
+        if (rec_ptr->generator_id == gen_id)
+        {
+            ids_print_alert_rec(rec_ptr);
+            count++;
+        }
+    }
     if (count > 0)
         printf("Found %d alerts matching generator %d\n", count, gen_id);
     else
@@ -225,8 +255,15 @@ void ids_list_gen(llist_t *list_ptr, int gen_id)
 void ids_list_ip(llist_t *list_ptr, int dest_ip)
 {
     int count = 0;
-    // First, you must print each of the matching alerts
-    // after printing each matching record, print one of these summaries
+    for (int index = 0; index < llist_entries(list_ptr); index++)
+    {
+        alert_t *rec_ptr = llist_access(list_ptr, index);
+        if (rec_ptr->dest_ip_addr == dest_ip)
+        {
+            ids_print_alert_rec(rec_ptr);
+            count++;
+        }
+    }
     if (count > 0)
         printf("Found %d alerts matching IP %d\n", count, dest_ip);
     else
@@ -239,6 +276,15 @@ void ids_list_ip(llist_t *list_ptr, int dest_ip)
 void ids_remove_gen(llist_t *list_ptr, int gen_id)
 {
     int count = 0;
+    for (int index = llist_entries(list_ptr) - 1; index >= 0; index--)
+    {
+        alert_t *rec_ptr = llist_access(list_ptr, index);
+        if (rec_ptr->generator_id == gen_id)
+        {
+            free(llist_remove(list_ptr, index));
+            count++;
+        }
+    }
     if (count > 0)
         printf("Removed %d alerts matching generator %d\n", count, gen_id);
     else
@@ -251,6 +297,15 @@ void ids_remove_gen(llist_t *list_ptr, int gen_id)
 void ids_remove_ip(llist_t *list_ptr, int dest_ip)
 {
     int count = 0;
+    for (int index = llist_entries(list_ptr) - 1; index >= 0; index--)
+    {
+        alert_t *rec_ptr = llist_access(list_ptr, index);
+        if (rec_ptr->dest_ip_addr == dest_ip)
+        {
+            free(llist_remove(list_ptr, index));
+            count++;
+        }
+    }
     if (count > 0)
         printf("Removed %d alerts matching IP %d\n", count, dest_ip);
     else
@@ -259,13 +314,28 @@ void ids_remove_ip(llist_t *list_ptr, int dest_ip)
 
 void ids_scan(llist_t *list_ptr, int thresh)
 {
-    int count = 0;
-    int found_addr = -1;
     int sets = 0;
-    // for each set that is found print the following line
-    printf("A set with generator %d has %d alerts\n", found_addr, count);
+    int index = 0;
+    int entries = llist_entries(list_ptr);
 
-    // after all sets have been discovered print one of the following
+    while (index < entries)
+    {
+        alert_t *first = llist_access(list_ptr, index);
+        int generator_id = first->generator_id;
+        int count = 0;
+
+        while (index + count < entries &&
+               llist_access(list_ptr, index + count)->generator_id == generator_id)
+            count++;
+
+        if (count >= thresh)
+        {
+            printf("A set with generator %d has %d alerts\n", generator_id, count);
+            sets++;
+        }
+        index += count;
+    }
+
     if (sets > 0)
         printf("Scan found %d sets\n", sets);
     else
@@ -277,9 +347,8 @@ void ids_scan(llist_t *list_ptr, int thresh)
  */
 void ids_stats(llist_t *sorted, llist_t *unsorted)
 {
-    // get the number in list and size of the list
-    int num_in_sorted_list = 0;
-    int num_in_unsorted_list = 0;
+    int num_in_sorted_list = llist_entries(sorted);
+    int num_in_unsorted_list = llist_entries(unsorted);
     printf("Number records in list: %d, queue size: %d\n",
            num_in_sorted_list, num_in_unsorted_list);
 }
@@ -288,6 +357,7 @@ void ids_stats(llist_t *sorted, llist_t *unsorted)
  */
 void ids_cleanup(llist_t *list_ptr)
 {
+    llist_destruct(list_ptr);
 }
 
 /* Prompts user for alert record input starting with the generator ID.
