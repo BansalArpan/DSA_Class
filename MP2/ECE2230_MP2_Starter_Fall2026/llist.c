@@ -4,11 +4,12 @@
  * ECE 2230 Fall 2026
  * MP2
  *
- * Purpose: A template for llist.c. You will make many changes.
+ * Purpose: Implement a generic two-way linked-list ADT for alert records.
  *
- * Assumptions: Many details are incomplete.
+ * Assumptions: The list owns each data record after insertion and releases
+ *              stored records when it is destructed.
  *
- * Bugs: Many details have not been implemented.
+ * Bugs: No known bugs.
  *
  */
 #include <stdlib.h>

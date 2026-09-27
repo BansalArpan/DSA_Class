@@ -4,22 +4,13 @@
  * ECE 2230 Fall 2026
  * MP2
  *
- * Purpose: A template for MP2
+ * Purpose: Provide alert-list operations for the MP2 command interface.
  *
- * Assumptions: suggested structure definitions and public functions
- *              as defined for assignment.
+ * Assumptions: The list ADT owns records after they are inserted.  The
+ *              sorted list is ordered by generator ID, while the queue is
+ *              unsorted and permits only one record per destination IP.
  *
- *              You must change this file for your design.
- *
- *              I have provided prototypes of some of the functions
- *              and you CANNOT change these prototypes
- *
- *              However, you can add additional functions to handle
- *              operations on the lists.
- *
- * Bugs:
- *
- * You must change this file for your design.
+ * Bugs: No known bugs.
  *
  * (You CANNOT modify any of the details of the llist.h interface, or use any
  *  of the private variables outside of llist.c.)

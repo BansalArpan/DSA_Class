@@ -4,14 +4,13 @@
  * ECE 2230 Fall 2026
  * MP2
  *
- * NOTE:  You must update the comments in the file header comment block!
- *
- * Purpose: A template for MP2
+ * Purpose: Read MP2 commands and apply them to sorted and unsorted
+ *          linked lists of alert records.
  *
  * Assumptions: The main function simply collects input commands and
  *              calls the appropriate ids function.
  *
- *              Other than updating comments you will not change this file.
+ *              The command loop delegates list operations to ids_support.c.
  *
  * See the ECE 2230 programming guide
  *

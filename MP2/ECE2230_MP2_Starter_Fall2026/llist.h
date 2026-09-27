@@ -1,6 +1,10 @@
-/* llist.h 
+/* llist.h
+ * Arpan Bansal
+ * abansal
+ * ECE 2230 Fall 2026
+ * MP2
  *
- * Public functions for two-way linked list
+ * Purpose: Public interface for a generic two-way linked-list ADT.
  *
  * You should not need to change anything in this file.  If you do you
  * must get permission from the instructor.

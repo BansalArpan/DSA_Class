@@ -2,93 +2,54 @@ Welcome to lab2.
 Sorted list: ALERT; LISTGEN x; LISTIP x; DELGEN x; DELIP x; SCANGEN x; PRINT
 Queue      : ADDREAR; RMFRONT; PRINTQ
            : STATS; QUIT
-# Prof. Luyang Zhao
-# ECE 2230, MP2, Fall 2026
-# testinput
-# 
-# Test script to show a few simple tests for the linked-list ADT.
-# 
-# TEST 1:  Add three entries to list.  
-# 
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Inserted 111 into list
-Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Inserted 551 into list
+Inserted 300 into list
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
 Inserted 100 into list
-# 
-# TEST 2: Print the list and verify three entries are sorted 
-# 
-List contains 3 records.
-1: [100:111:3] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 3
-2: [111:100:1] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 1
-3: [551:500:2] (gen, sig, rev): Dest IP: 1501, Src: 5, Dest port: 2, Src: 5, Time: 2
-
-# 
-# TEST 3:  Add a second and a third 111 entry in the list
-# 
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Inserted 111 into list
+Inserted 300 into list
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Inserted 111 into list
-# 
-# TEST 4: Print the list, verify three entrys for 111, and five total entries
-# 
-List contains 5 records.
-1: [100:111:3] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 3
-2: [111:100:1] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 1
-3: [111:101:4] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 4
-4: [111:105:5] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 5
-5: [551:500:2] (gen, sig, rev): Dest IP: 1501, Src: 5, Dest port: 2, Src: 5, Time: 2
-
-# 
-# TEST 5: Scan for attack on with alert 111 and then print details
-# 
-A set with generator 111 has 3 alerts
-Scan found 1 sets
-[111:100:1] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 1
-[111:101:4] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 4
-[111:105:5] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 5
-Found 3 alerts matching generator 111
-[100:111:3] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 3
-[111:100:1] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 1
-Found 2 alerts matching IP 1500
-# 
-# TEST 6: Remove the last element in the list. Then removed records with Dest IP 1500
-# 
-Removed 1 alerts matching generator 551
+Inserted 200 into list
 List contains 4 records.
-1: [100:111:3] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 3
-2: [111:100:1] (gen, sig, rev): Dest IP: 1500, Src: 2, Dest port: 1, Src: 1, Time: 1
-3: [111:101:4] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 4
-4: [111:105:5] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 5
+1: [100:20:2] (gen, sig, rev): Dest IP: 1921, Src: 11, Dest port: 443, Src: 4001, Time: 2
+2: [200:40:4] (gen, sig, rev): Dest IP: 1920, Src: 13, Dest port: 8080, Src: 4003, Time: 4
+3: [300:10:1] (gen, sig, rev): Dest IP: 1920, Src: 10, Dest port: 80, Src: 4000, Time: 1
+4: [300:30:3] (gen, sig, rev): Dest IP: 1922, Src: 12, Dest port: 22, Src: 4002, Time: 3
 
-Removed 2 alerts matching IP 1500
-List contains 2 records.
-1: [111:101:4] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 4
-2: [111:105:5] (gen, sig, rev): Dest IP: 1504, Src: 2, Dest port: 1, Src: 9, Time: 5
+[300:10:1] (gen, sig, rev): Dest IP: 1920, Src: 10, Dest port: 80, Src: 4000, Time: 1
+[300:30:3] (gen, sig, rev): Dest IP: 1922, Src: 12, Dest port: 22, Src: 4002, Time: 3
+Found 2 alerts matching generator 300
+Did not find alert: 999
+[200:40:4] (gen, sig, rev): Dest IP: 1920, Src: 13, Dest port: 8080, Src: 4003, Time: 4
+[300:10:1] (gen, sig, rev): Dest IP: 1920, Src: 10, Dest port: 80, Src: 4000, Time: 1
+Found 2 alerts matching IP 1920
+Did not find destination IP: 9999
+A set with generator 300 has 2 alerts
+Scan found 1 sets
+Removed 1 alerts matching generator 100
+Did not remove alert with generator: 999
+Removed 2 alerts matching IP 1920
+Did not remove alert with IP: 9999
+List contains 1 record.
+1: [300:30:3] (gen, sig, rev): Dest IP: 1922, Src: 12, Dest port: 22, Src: 4002, Time: 3
 
-# 
-# TEST 7: Add to the unsorted list.  The third item should replace the second
-# 
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Appended 2020 onto queue
+Appended 3000 onto queue
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Appended 2021 onto queue
+Appended 3001 onto queue
 Generator component:Signature:Revision:Dest IP address:Source IP address:Destination port number:Source port number:Time:
-Appended 2021 onto queue and removed old copy
-# 
+Appended 3000 onto queue and removed old copy
 Queue contains 2 records.
-1: [223:222:5] (gen, sig, rev): Dest IP: 2020, Src: 2, Dest port: 1, Src: 9, Time: 6
-2: [352:223:5] (gen, sig, rev): Dest IP: 2021, Src: 2, Dest port: 1, Src: 9, Time: 8
+1: [501:51:6] (gen, sig, rev): Dest IP: 3001, Src: 21, Dest port: 1001, Src: 5001, Time: 6
+2: [502:52:7] (gen, sig, rev): Dest IP: 3000, Src: 22, Dest port: 1002, Src: 5002, Time: 7
 
-# 
-# TEST 8: delete both records in the unsorted list
-# 
-Deleted front with IP addr: 2020
-Deleted front with IP addr: 2021
-Number records in list: 2, queue size: 0
-# 
-# TEST 9: Quit
-# 
+Deleted front with IP addr: 3001
+Deleted front with IP addr: 3000
+Queue empty, did not remove
+Number records in list: 1, queue size: 0
+List contains 1 record.
+1: [300:30:3] (gen, sig, rev): Dest IP: 1922, Src: 12, Dest port: 22, Src: 4002, Time: 3
+
+Queue is empty
+
 Goodbye

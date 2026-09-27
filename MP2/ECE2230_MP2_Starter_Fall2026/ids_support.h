@@ -4,18 +4,16 @@
  * ECE 2230 Fall 2026
  * MP2
  *
- * Purpose: A template for MP2
+ * Purpose: Public alert-list operations used by the MP2 command interface.
  *
- * Assumptions: suggested structure definitions and public functions
- *              as defined for assignment.
- *
- *              I have provided prototypes of some of the functions
- *              and you CANNOT change these prototypes
+ * Assumptions: The implementation uses the public linked-list ADT interface.
+ *              The sorted list is ordered by generator ID, and the queue
+ *              stores no duplicate destination IP addresses.
  *
  *              All function prototypes in this file must start with the prefix
  *              ids_ and are public.
  *
- * Bugs:
+ * Bugs: No known bugs.
  *
  * (You CANNOT modify any of the details of the llist.h interface, or use any
  *  of the private variables outside of llist.c.)
