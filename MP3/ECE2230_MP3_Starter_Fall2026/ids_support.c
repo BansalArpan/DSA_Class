@@ -149,6 +149,15 @@ void ids_add_rear(llist_t *list_ptr)
     // print one of the two following lines
 }
 
+void ids_append_rear(llist_t *list_ptr, int gen_id, int dest_ip)
+{
+    alert_t *new_ptr = (alert_t *)calloc(1, sizeof(alert_t));
+    new_ptr->generator_id = gen_id;
+    new_ptr->dest_ip_addr = dest_ip;
+
+    llist_insert(list_ptr, new_ptr, LLPOSITION_BACK);
+}
+
 /* This function removes the alert record at the front of the queue.  The
  * queue is unsorted, and there is no limit on the maximum size of the list.
  *

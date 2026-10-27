@@ -49,5 +49,12 @@ void ids_scan(llist_t *, int);
 void ids_add_rear(llist_t *);
 void ids_remove_front(llist_t *);
 
+/*
+ * MP3 Functions to append an alert to the rear of the queue.  The alert is
+ * created with the specified generator id and destination ip address.
+ * Duplicate alerts with the same destination IP address are allowed
+ */
+void ids_append_rear(llist_t *, int, int);
+
 /* commands specified to vim. ts: tabstop, sts: soft tabstop sw: shiftwidth */
 /* vi:set ts=8 sts=4 sw=4 et: */

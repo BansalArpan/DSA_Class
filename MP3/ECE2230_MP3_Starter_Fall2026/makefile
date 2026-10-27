@@ -16,8 +16,8 @@
 #    <tab> last command
 #    <blank line>   -- the list of commands must end with a blank line
 
-lab2 : llist.o ids_support.o lab2.o
-	gcc -Wall -g llist.o ids_support.o lab2.o -o lab2
+lab3 : llist.o ids_support.o lab3.o
+	gcc -Wall -g llist.o ids_support.o lab3.o -o lab3
 
 llist.o : llist.c datatypes.h llist.h
 	gcc -Wall -g -c llist.c
@@ -25,8 +25,8 @@ llist.o : llist.c datatypes.h llist.h
 ids_support.o : ids_support.c datatypes.h llist.h ids_support.h
 	gcc -Wall -g -c ids_support.c
 
-lab2.o : lab2.c datatypes.h llist.h ids_support.h
-	gcc -Wall -g -c lab2.c
+lab3.o : lab3.c datatypes.h llist.h ids_support.h
+	gcc -Wall -g -c lab3.c
 
 driver : driver.o llist.o ids_support.o
 	gcc -Wall -g llist.o ids_support.o driver.o -o driver
@@ -54,5 +54,5 @@ design :
 	@grep "ids_" llist.c ||:
 
 clean :
-	rm -f *.o lab2 driver core a.out gradingout*
+	rm -f *.o lab3 driver core a.out gradingout*
 

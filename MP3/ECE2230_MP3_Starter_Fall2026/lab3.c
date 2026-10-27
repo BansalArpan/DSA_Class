@@ -40,7 +40,8 @@ int main(int argc, char *argv[])
     char line[MAXLINE];
     char command[MAXLINE];
     char junk[MAXLINE];
-    int command_number; // number found with command
+    int command_number;  // number found with command
+    int gen_id, dest_ip; // generator id and destination ip address for ADDREAR command
     int token_count;
     llist_t *unsorted_list = NULL; // Pointer to unsorted list
     llist_t *sorted_list = NULL;   // Pointer to sorted list
@@ -95,6 +96,12 @@ int main(int argc, char *argv[])
         else if (token_count == 1 && strcmp(command, "PRINT") == 0)
         {
             ids_print(sorted_list, "List");
+        }
+        else if (strcmp(command, "APPENDREAR") == 0 &&
+                 sscanf(line, "%255s %d %d %255s",
+                        command, &gen_id, &dest_ip, junk) == 3)
+        {
+            ids_append_rear(unsorted_list, gen_id, dest_ip);
         }
         else if (token_count == 1 && strcmp(command, "ADDREAR") == 0)
         {
