@@ -1,5 +1,5 @@
 """Usage: python3 plot_performance.py [performance_data.txt]
-Requires matplotlib. Writes PNG and PDF graphs into graphs/ beside this script.
+Requires matplotlib. Writes three PNG graphs into graphs/ beside this script.
 """
 from collections import defaultdict
 from pathlib import Path
@@ -15,17 +15,24 @@ os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "mp3-mat
 import matplotlib
 matplotlib.use("Agg")  # Save graphs without opening a desktop window.
 import matplotlib.pyplot as plt
-from matplotlib.ticker import MaxNLocator
 
 NAMES = {
     1: "Insertion sort",
     2: "Recursive selection sort",
     3: "Iterative selection sort",
     4: "Merge sort",
-    5: "qsort_r",
+    5: "Quick Sort",
 }
 ORDERS = {1: "Random", 2: "Ascending", 3: "Descending"}
-COLORS = {1: "tab:blue", 2: "tab:orange", 3: "tab:green"}
+ALGORITHM_COLORS = {
+    1: "tab:blue",
+    2: "tab:orange",
+    3: "tab:green",
+    4: "tab:red",
+    5: "tab:purple",
+}
+ALGORITHM_LINE_STYLES = {1: "-", 2: "--", 3: "-.", 4: ":", 5: (0, (3, 1, 1, 1))}
+ALGORITHM_MARKERS = {1: "o", 2: "s", 3: "^", 4: "D", 5: "P"}
 
 
 def load_data(path):
@@ -118,13 +125,12 @@ def style(ax, title):
     ax.set_xlabel("Number of records")
     ax.set_ylabel("CPU time (milliseconds)")
     ax.grid(True, alpha=0.3)
-    ax.legend()
+    ax.legend(loc="lower right")
 
 
 def save(fig, directory, name):
     fig.tight_layout()
     fig.savefig(directory / f"{name}.png", dpi=200)
-    fig.savefig(directory / f"{name}.pdf")
     plt.close(fig)
 
 
@@ -135,31 +141,29 @@ def main():
     output = root / "graphs"
     output.mkdir(exist_ok=True)
 
-    # One graph per algorithm shows the effect of initial input order.
-    for algorithm, name in NAMES.items():
-        fig, ax = plt.subplots(figsize=(8, 5))
-        for order, label in ORDERS.items():
-            x, y = zip(*data[algorithm, order])
-            ax.plot(x, y, "o-", label=label, color=COLORS[order])
-        ax.axhline(1000, color="gray", linestyle=":", label="1 second")
-        ax.ticklabel_format(axis="x", style="plain")
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        style(ax, name)
-        save(fig, output, f"algorithm_{algorithm}")
-
-    # Plot each algorithm at its measured sizes; no shared-size requirement.
+    # Plot all algorithms for each input order.
     for order, order_name in ORDERS.items():
         fig, ax = plt.subplots(figsize=(8, 5))
         for algorithm, name in NAMES.items():
             points = data[algorithm, order]
             x, y = zip(*points)
             # The scale includes zero and keeps fast algorithms visible.
-            ax.plot(x, y, "o-", label=name)
+            ax.plot(
+                x,
+                y,
+                label=name,
+                color=ALGORITHM_COLORS[algorithm],
+                linestyle=ALGORITHM_LINE_STYLES[algorithm],
+                marker=ALGORITHM_MARKERS[algorithm],
+            )
         ax.set_xscale("log")
         ax.set_yscale("symlog", linthresh=1)
-        style(ax, f"Algorithms compared: {order_name.lower()} input (measured sizes)")
+        style(
+            ax,
+            f"Execution Time vs. Input Size for {order_name.lower()} input.",
+        )
         save(fig, output, f"comparison_{order_name.lower()}")
-    print(f"Saved 8 graphs as PNG and PDF in {output}")
+    print(f"Saved 3 graphs as PNGs in {output}")
 
 
 if __name__ == "__main__":
