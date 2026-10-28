@@ -30,7 +30,7 @@
 # TEST 1 Insertion sort
 echo -e "The date today is `date`\t\t"
 echo -e "insertion sort with random list\t\t"
-sizes="1000 4500 6750 9000 13500 18000"
+sizes="1000 4500 9000 13500 30000"
 for listsize in $sizes ; do
    ./geninput $listsize 1 1 gen | ./lab3
 done
@@ -73,7 +73,7 @@ done
 #
 # TEST 4 Merge sort
 echo -e "merge sort with random list\t\t"
-sizes="18000 150000 300000 450000 600000 750000"
+sizes="18000 300000 600000 1000000 3000000"
 for listsize in $sizes ; do
    ./geninput $listsize 1 4 gen | ./lab3
 done
@@ -89,7 +89,7 @@ done
 #
 # TEST 5 qsort
 echo -e "qsort with random list\t\t"
-sizes="18000 150000 300000 450000 600000 750000 2000000"
+sizes="18000 300000 600000 1000000 3000000"
 for listsize in $sizes ; do
    ./geninput $listsize 1 5 gen | ./lab3
 done

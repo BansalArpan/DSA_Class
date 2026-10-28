@@ -2,13 +2,13 @@
  * Arpan Bansal
  * abansal
  * ECE 2230 Fall 2026
- * MP2
+ * MP3
  *
- * Purpose: Public alert-list operations used by the MP2 command interface.
+ * Purpose: Public alert-list operations used by the MP3 command interface.
  *
  * Assumptions: The implementation uses the public linked-list ADT interface.
  *              The sorted list is ordered by generator ID, and the queue
- *              stores no duplicate destination IP addresses.
+ *              permits duplicate destination IP addresses with APPENDREAR.
  *
  *              All function prototypes in this file must start with the prefix
  *              ids_ and are public.
@@ -58,3 +58,7 @@ void ids_append_rear(llist_t *, int, int);
 
 /* commands specified to vim. ts: tabstop, sts: soft tabstop sw: shiftwidth */
 /* vi:set ts=8 sts=4 sw=4 et: */
+
+int ids_compare_ip(const alert_t *, const alert_t *);
+void ids_sort_gen(llist_t *, int);
+void ids_sort_ip(llist_t *, int);

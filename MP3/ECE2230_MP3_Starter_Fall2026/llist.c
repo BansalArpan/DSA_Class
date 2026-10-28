@@ -2,7 +2,7 @@
  *  Arpan Bansal
  *  Abansal
  * ECE 2230 Fall 2026
- * MP2
+ * MP3
  *
  * Purpose: Implement a generic two-way linked-list ADT for alert records.
  *
@@ -12,10 +12,12 @@
  * Bugs: No known bugs.
  *
  */
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <assert.h>
 
 #include "llist.h" // defines public functions for list ADT
+#include <time.h>
 
 // definitions for private constants used in llist.c only
 
@@ -47,7 +49,6 @@ data_t *llist_access(llist_t *list_ptr, int pos_index)
     llist_elem_t *rover = NULL;
 
     // debugging function to verify that the structure of the list is valid
-    llist_debug_validate(list_ptr);
 
     /* handle special cases.
      *   1.  The list is empty
@@ -112,7 +113,6 @@ llist_t *llist_construct(int (*fcomp)(const data_t *, const data_t *))
     else
         new_list->ll_sorted_state = LLIST_SORTED;
 
-    llist_debug_validate(new_list);
     return new_list;
 }
 
@@ -137,10 +137,8 @@ llist_t *llist_construct(int (*fcomp)(const data_t *, const data_t *))
  * pos_index: used as a return value for the position index of matching element
  *
  */
-data_t *llist_elem_find(llist_t *list_ptr, data_t *elem_ptr, int *pos_index,
-                        int (*fcomp)(const data_t *, const data_t *))
+data_t *llist_elem_find(llist_t *list_ptr, data_t *elem_ptr, int *pos_index, int (*fcomp)(const data_t *, const data_t *))
 {
-    llist_debug_validate(list_ptr);
 
     *pos_index = 0;
 
@@ -163,7 +161,6 @@ data_t *llist_elem_find(llist_t *list_ptr, data_t *elem_ptr, int *pos_index,
 void llist_destruct(llist_t *list_ptr)
 {
     // the first line must validate the list
-    llist_debug_validate(list_ptr);
 
     for (llist_elem_t *rover = list_ptr->ll_front; rover != NULL;)
     {
@@ -246,7 +243,7 @@ void llist_insert(llist_t *list_ptr, data_t *elem_ptr, int pos_index)
     // the last three lines of this function must be the following
     if (list_ptr->ll_sorted_state == LLIST_SORTED)
         list_ptr->ll_sorted_state = LLIST_UNSORTED;
-    llist_debug_validate(list_ptr);
+
 }
 
 /* Inserts the element into the specified sorted list at the proper position,
@@ -292,7 +289,7 @@ void llist_insert_sorted(llist_t *list_ptr, data_t *elem_ptr)
         new_elem->ll_prev = NULL;
         new_elem->ll_next = NULL;
         list_ptr->ll_entry_count++;
-        llist_debug_validate(list_ptr);
+
         return;
     }
 
@@ -308,7 +305,7 @@ void llist_insert_sorted(llist_t *list_ptr, data_t *elem_ptr)
                 list_ptr->ll_front = new_elem;
             rover->ll_prev = new_elem;
             list_ptr->ll_entry_count++;
-            llist_debug_validate(list_ptr);
+
             return;
         }
     }
@@ -318,7 +315,7 @@ void llist_insert_sorted(llist_t *list_ptr, data_t *elem_ptr)
     list_ptr->ll_back->ll_next = new_elem;
     list_ptr->ll_back = new_elem;
     list_ptr->ll_entry_count++;
-    llist_debug_validate(list_ptr);
+
 }
 
 /* Removes an element from the specified list, at the specified list position,
@@ -399,7 +396,7 @@ data_t *llist_remove(llist_t *list_ptr, int pos_index)
     }
 
     // the last line should verify the list is valid after the remove
-    llist_debug_validate(list_ptr);
+
     return data; // returns the pointer to the data that was removed from the list
 }
 
@@ -483,5 +480,148 @@ void llist_debug_validate(llist_t *L)
         }
     }
 }
+
 /* commands for vim. ts: tabstop, sts: softtabstop sw: shiftwidth */
 /* vi:set ts=8 sts=4 sw=4 et: */
+
+
+/* Select the record that belongs first in the inclusive range m through n.
+ * Like Standish's FindMax, this helper is called only when m != n. */
+static llist_elem_t *selection_first(llist_t *L, llist_elem_t *m,
+                                      llist_elem_t *n)
+{
+    llist_elem_t *i = m;
+    llist_elem_t *best = m;
+    do {
+        i = i->ll_next;
+        if (L->compare_fun(i->data_ptr, best->data_ptr) == 1)
+            best = i;
+    } while (i != n);
+    return best;
+}
+
+static void selection_recursive(llist_t *L, llist_elem_t *m,
+                                llist_elem_t *n)
+{
+    if (m != n) {
+        llist_elem_t *best = selection_first(L, m, n);
+        data_t *temp = m->data_ptr;
+        m->data_ptr = best->data_ptr;
+        best->data_ptr = temp;
+        selection_recursive(L, m->ll_next, n);
+    }
+}
+
+static void selection_iterative(llist_t *L, llist_elem_t *m,
+                                llist_elem_t *n)
+{
+    while (m != n) {
+        llist_elem_t *best = selection_first(L, m, n);
+        data_t *temp = m->data_ptr;
+        m->data_ptr = best->data_ptr;
+        best->data_ptr = temp;
+        m = m->ll_next;
+    }
+}
+
+/* Split by links in linear time; each half owns a disjoint node chain. */
+static void merge_partition(llist_t *L, llist_t *left, llist_t *right)
+{
+    *left = *L;
+    *right = *L;
+    left->ll_entry_count = L->ll_entry_count / 2;
+    right->ll_entry_count = L->ll_entry_count - left->ll_entry_count;
+    left->ll_back = L->ll_front;
+    for (int i = 1; i < left->ll_entry_count; ++i)
+        left->ll_back = left->ll_back->ll_next;
+    right->ll_front = left->ll_back->ll_next;
+    left->ll_back->ll_next = NULL;
+    right->ll_front->ll_prev = NULL;
+    left->ll_sorted_state = LLIST_UNSORTED;
+    right->ll_sorted_state = LLIST_UNSORTED;
+    L->ll_front = L->ll_back = NULL;
+    L->ll_entry_count = 0;
+    L->ll_sorted_state = LLIST_UNSORTED;
+}
+
+static void merge_lists(llist_t *L, llist_t *left, llist_t *right)
+{
+    while (llist_entries(left) > 0 || llist_entries(right) > 0) {
+        llist_t *source;
+        if (llist_entries(right) == 0)
+            source = left;
+        else if (llist_entries(left) == 0)
+            source = right;
+        else if (L->compare_fun(left->ll_front->data_ptr,
+                                right->ll_front->data_ptr) != -1)
+            source = left;
+        else
+            source = right;
+        llist_insert(L, llist_remove(source, LLPOSITION_FRONT), LLPOSITION_BACK);
+    }
+}
+
+static void merge_sort(llist_t *L)
+{
+    if (llist_entries(L) > 1) {
+        llist_t left, right;
+        merge_partition(L, &left, &right);
+        merge_sort(&left);
+        merge_sort(&right);
+        merge_lists(L, &left, &right);
+    }
+}
+
+/* qsort_r uses the opposite sign convention from the list comparator. */
+static int qsort_compare(const void *a, const void *b, void *context)
+{
+    llist_t *L = context;
+    return L->compare_fun(*(data_t * const *)b, *(data_t * const *)a);
+}
+
+void llist_sort(llist_t *list_ptr, int sort_type,
+                int (*fcomp)(const data_t *, const data_t *))
+{
+    assert(list_ptr != NULL && fcomp != NULL);
+    assert(sort_type >= 1 && sort_type <= 5);
+    list_ptr->compare_fun = fcomp;
+    /* The new comparator may differ from the previous sorted order. */
+    list_ptr->ll_sorted_state = LLIST_UNSORTED;
+
+    if (llist_entries(list_ptr) > 1) {
+        switch (sort_type) {
+        case 1: {
+            llist_t *sorted = llist_construct(fcomp);
+            while (llist_entries(list_ptr) > 0)
+                llist_insert_sorted(sorted,
+                    llist_remove(list_ptr, LLPOSITION_FRONT));
+            *list_ptr = *sorted;
+            free(sorted);
+            break;
+        }
+        case 2:
+            selection_recursive(list_ptr, list_ptr->ll_front, list_ptr->ll_back);
+            break;
+        case 3:
+            selection_iterative(list_ptr, list_ptr->ll_front, list_ptr->ll_back);
+            break;
+        case 4:
+            merge_sort(list_ptr);
+            break;
+        case 5: {
+            int count = llist_entries(list_ptr);
+            data_t **items = malloc((size_t)count * sizeof(*items));
+            assert(items != NULL);
+            for (int i = 0; i < count; ++i)
+                items[i] = llist_remove(list_ptr, LLPOSITION_FRONT);
+            qsort_r(items, (size_t)count, sizeof(*items), qsort_compare, list_ptr);
+            for (int i = 0; i < count; ++i)
+                llist_insert(list_ptr, items[i], LLPOSITION_BACK);
+            free(items);
+            break;
+        }
+        }
+    }
+    list_ptr->ll_sorted_state = LLIST_SORTED;
+    llist_debug_validate(list_ptr);
+}

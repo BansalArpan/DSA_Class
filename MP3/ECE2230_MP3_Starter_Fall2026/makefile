@@ -1,6 +1,6 @@
-# The makefile for MP2.
+# The makefile for MP3.
 #
-# make          -- to build program lab2
+# make          -- to build program lab3
 # make design   -- to verify no illegal variables
 # make driver   -- to compile testing program
 # make clean    -- to delete object files, executable, and core
@@ -16,9 +16,13 @@
 #    <tab> last command
 #    <blank line>   -- the list of commands must end with a blank line
 
+
+
+
 lab3 : llist.o ids_support.o lab3.o
 	gcc -Wall -g llist.o ids_support.o lab3.o -o lab3
-
+geninput: geninput.c
+	gcc -Wall -g geninput.c -o geninput
 llist.o : llist.c datatypes.h llist.h
 	gcc -Wall -g -c llist.c
 
@@ -39,20 +43,20 @@ driver.o : driver.c datatypes.h llist.h ids_support.h
 #  @command || true to avoid Make's error
 #  : is shorthand for true
 design :
-	@grep -e "-> *ll_front" lab2.c ids_support.c ||:
-	@grep -e "-> *ll_back" lab2.c ids_support.c ||:
-	@grep -e "-> *ll_entry_count" lab2.c ids_support.c ||:
-	@grep -e "-> *ll_sorted_state" lab2.c ids_support.c ||:
-	@grep -e "-> *ll_next" lab2.c ids_support.c ||:
-	@grep -e "-> *ll_prev" lab2.c ids_support.c ||:
-	@grep -e "-> *data_ptr" lab2.c ids_support.c ||:
-	@grep "compare_fun" lab2.c ids_support.c ||:
-	@grep "llist_elem_t" lab2.c ids_support.c ||:
+	@grep -e "-> *ll_front" lab3.c ids_support.c ||:
+	@grep -e "-> *ll_back" lab3.c ids_support.c ||:
+	@grep -e "-> *ll_entry_count" lab3.c ids_support.c ||:
+	@grep -e "-> *ll_sorted_state" lab3.c ids_support.c ||:
+	@grep -e "-> *ll_next" lab3.c ids_support.c ||:
+	@grep -e "-> *ll_prev" lab3.c ids_support.c ||:
+	@grep -e "-> *data_ptr" lab3.c ids_support.c ||:
+	@grep "compare_fun" lab3.c ids_support.c ||:
+	@grep "llist_elem_t" lab3.c ids_support.c ||:
 	@grep "generator_id" llist.c ||:
 	@grep "dest_ip_addr" llist.c ||:
 	@grep "alert_t" llist.c ||:
 	@grep "ids_" llist.c ||:
 
 clean :
-	rm -f *.o lab3 driver core a.out gradingout*
+	rm -f *.o lab3 geninput driver core a.out gradingout*
 

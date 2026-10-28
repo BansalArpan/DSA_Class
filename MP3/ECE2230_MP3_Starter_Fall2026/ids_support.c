@@ -2,13 +2,13 @@
  * Arpan Bansal
  * abansal
  * ECE 2230 Fall 2026
- * MP2
+ * MP3
  *
- * Purpose: Provide alert-list operations for the MP2 command interface.
+ * Purpose: Provide alert-list operations for the MP3 command interface.
  *
  * Assumptions: The list ADT owns records after they are inserted.  The
  *              sorted list is ordered by generator ID, while the queue is
- *              unsorted and permits only one record per destination IP.
+ *              populated by APPENDREAR permits duplicate destination IPs.
  *
  * Bugs: No known bugs.
  *
@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 
 #include "llist.h"
 #include "ids_support.h"
@@ -152,6 +153,7 @@ void ids_add_rear(llist_t *list_ptr)
 void ids_append_rear(llist_t *list_ptr, int gen_id, int dest_ip)
 {
     alert_t *new_ptr = (alert_t *)calloc(1, sizeof(alert_t));
+    assert(new_ptr != NULL);
     new_ptr->generator_id = gen_id;
     new_ptr->dest_ip_addr = dest_ip;
 
@@ -423,3 +425,39 @@ void ids_print_alert_rec(alert_t *rec)
 
 /* commands specified to vim. ts: tabstop, sts: soft tabstop sw: shiftwidth */
 /* vi:set ts=8 sts=4 sw=4 et: */
+
+
+/* Return 1 when a belongs before b: IP addresses are descending. */
+int ids_compare_ip(const alert_t *a, const alert_t *b)
+{
+    assert(a != NULL && b != NULL);
+    if (a->dest_ip_addr > b->dest_ip_addr)
+        return 1;
+    if (a->dest_ip_addr < b->dest_ip_addr)
+        return -1;
+    return 0;
+}
+
+static void ids_sort_timed(llist_t *L, int sort_type,
+                           int (*compare)(const data_t *, const data_t *))
+{
+    clock_t start, end;
+    double elapse_time;
+    int initialcount = llist_entries(L);
+    start = clock();
+    llist_sort(L, sort_type, compare);
+    end = clock();
+    elapse_time = 1000.0 * ((double)(end - start)) / CLOCKS_PER_SEC;
+    assert(llist_entries(L) == initialcount);
+    printf("%d\t%f\t%d\n", initialcount, elapse_time, sort_type);
+}
+
+void ids_sort_gen(llist_t *L, int sort_type)
+{
+    ids_sort_timed(L, sort_type, ids_compare_genid);
+}
+
+void ids_sort_ip(llist_t *L, int sort_type)
+{
+    ids_sort_timed(L, sort_type, ids_compare_ip);
+}

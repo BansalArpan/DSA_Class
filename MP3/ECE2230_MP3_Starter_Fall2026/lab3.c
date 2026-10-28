@@ -1,10 +1,10 @@
-/* lab2.c
+/* lab3.c
  * Arpan Bansal
  * abansal
  * ECE 2230 Fall 2026
- * MP2
+ * MP3
  *
- * Purpose: Read MP2 commands and apply them to sorted and unsorted
+ * Purpose: Read MP3 commands and apply them to sorted and unsorted
  *          linked lists of alert records.
  *
  * Assumptions: The main function simply collects input commands and
@@ -37,6 +37,7 @@
 
 int main(int argc, char *argv[])
 {
+    (void)argv;
     char line[MAXLINE];
     char command[MAXLINE];
     char junk[MAXLINE];
@@ -48,18 +49,14 @@ int main(int argc, char *argv[])
 
     if (argc != 1)
     {
-        printf("Error with input paramters.  Usage: ./lab2\n");
+        printf("Error with input paramters.  Usage: ./lab3\n");
         exit(1);
     }
-    printf("Welcome to lab2.\n");
-    printf("Sorted list: ALERT; LISTGEN x; LISTIP x; DELGEN x; DELIP x; SCANGEN x; PRINT\n");
-    printf("Queue      : ADDREAR; RMFRONT; PRINTQ\n");
-    printf("           : STATS; QUIT\n");
 
     // this list is sorted
     sorted_list = ids_create("List");
 
-    // this list is unsorted and has no duplicates
+    // The queue permits duplicates through APPENDREAR.
     unsorted_list = ids_create("Queue");
 
     assert(sorted_list != NULL && "failed to construct the sorted list");
@@ -68,7 +65,9 @@ int main(int argc, char *argv[])
     // remember fgets includes newline \n unless line too long
     while (fgets(line, MAXLINE, stdin) != NULL)
     {
-        token_count = sscanf(line, "%s%d%s", command, &command_number, junk);
+        token_count = sscanf(line, "%255s%d%255s", command, &command_number, junk);
+        if (token_count < 1)
+            continue;
         if (token_count == 1 && strcmp(command, "ALERT") == 0)
         {
             ids_add(sorted_list);
@@ -103,6 +102,16 @@ int main(int argc, char *argv[])
         {
             ids_append_rear(unsorted_list, gen_id, dest_ip);
         }
+        else if (token_count == 2 &&
+                 (strcmp(command, "SORTGEN") == 0 || strcmp(command, "SORTIP") == 0))
+        {
+            if (command_number < 1 || command_number > 5)
+                continue;
+            if (strcmp(command, "SORTGEN") == 0)
+                ids_sort_gen(unsorted_list, command_number);
+            else
+                ids_sort_ip(unsorted_list, command_number);
+        }
         else if (token_count == 1 && strcmp(command, "ADDREAR") == 0)
         {
             ids_add_rear(unsorted_list);
@@ -121,17 +130,16 @@ int main(int argc, char *argv[])
         }
         else if (token_count == 1 && strcmp(command, "QUIT") == 0)
         {
-            ids_cleanup(sorted_list);
-            ids_cleanup(unsorted_list);
-            printf("Goodbye\n");
             break;
         }
         else
         {
-            printf("# %s", line);
+            /* Ignore comments and unrecognized commands. */
         }
     }
-    exit(0);
+    ids_cleanup(sorted_list);
+    ids_cleanup(unsorted_list);
+    return 0;
 }
 
 /* commands specified to vim. ts: tabstop, sts: soft tabstop sw: shiftwidth */

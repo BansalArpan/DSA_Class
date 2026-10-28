@@ -2,7 +2,7 @@
  * Arpan Bansal
  * abansal
  * ECE 2230 Fall 2026
- * MP2
+ * MP3
  *
  * Purpose: The data type that is stored in the list ADT is defined here.  We
  *          define a single mapping that allows the list ADT to be defined in

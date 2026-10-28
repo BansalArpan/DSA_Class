@@ -2,7 +2,7 @@
  * Arpan Bansal
  * abansal
  * ECE 2230 Fall 2026
- * MP2
+ * MP3
  *
  * Purpose: Public interface for a generic two-way linked-list ADT.
  *
@@ -45,3 +45,5 @@ data_t *  llist_remove(llist_t *list_ptr, int pos_index);
 
 /* commands specified to vim. ts: tabstop, sts: soft tabstop sw: shiftwidth */
 /* vi:set ts=8 sts=4 sw=4 et: */
+
+void llist_sort(llist_t *, int, int (*)(const data_t *, const data_t *));
